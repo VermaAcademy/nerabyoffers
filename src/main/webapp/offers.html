@@ -1,0 +1,111 @@
+<html lang="en">
+<head>
+<title>Card Offers</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+<!-- <link rel="stylesheet" href="css/bootstrap.min.css">
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script> -->
+</head>
+<body>
+	<nav class="navbar navbar-inverse">
+		<div class="container-fluid">
+			<div class="navbar-header"></div>
+		</div>
+	</nav>
+
+	<div class="page-header text-center">
+		<h3>
+			<b>Card Offers</b>
+		</h3>
+	</div>
+	<div class="col-md-5" style="margin-left: 500px">
+		<table class="table table-hover table-bordered" id="add_card_tbody">
+			<thead>
+			<a href="cards.html" class="btn btn-primary text-right" style="margin-bottom: 12px;">Previous</a>
+				<tr>
+					<th>MerchantName</th>
+					<th>CardType</th>
+					<th>Offers</th>
+					<th>MerchantLogo</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr></tr>
+			</tbody>
+		</table>
+	</div>
+
+	<script type="text/javascript">
+      $('.confirmation').on('click', function () {
+        return confirm('Are you sure?');
+      });   
+
+      $(document).ready(function(e){
+       
+        $.ajax({
+          type: 'GET',
+          url: "https://nearbyoffers.herokuapp.com/merchants/getAllMerchant/false",
+          dataType: "JSON",
+          beforeSend: function (xhr){ 
+              xhr.setRequestHeader("Accept","application/json");
+              xhr.setRequestHeader("Content-Type","application/json");
+            },
+          success: function(customers, textStatus, xhr) { 
+            for (var i = 0; i < customers.length; i++) {
+            	var newRowContent = '<tr id="customer_'+customers[i]['merchantName']+'"><td>'+customers[i]['merchantName']+'</td><td>'+customers[i]['cardType']+'</td><td>'+customers[i]['cardOffers']+'</td><td><img src="images/'+customers[i]['merchantLogo']+'.jpg" class="img-thumbnail" alt="Cinque Terre" style="width: 120px ;height: 90px"></td></tr>'
+              $("#add_card_tbody tbody").append(newRowContent);
+            }
+          },
+          error: function (xhr, ajaxOptions, thrownError) {
+            $(".error_message").addClass("show");
+            setTimeout(function() {
+             $(".error_message").removeClass("show");
+            }, 3000);
+            $("#addCard").modal("hide")
+          }
+        });
+      });
+    </script>
+    
+    <script type="text/javascript">
+    $(document).ready(function() {
+   	  var call_flag = true;
+    	setInterval(function() {
+   	    	if (call_flag == true){	
+   	    		$.ajax({
+   	             type: 'GET',
+   	             url: "https://nearbyoffers.herokuapp.com/merchants/getAllMerchant/true",
+   	             dataType: "JSON",
+   	             beforeSend: function (xhr){ 
+   	                 xhr.setRequestHeader("Accept","application/json");
+   	                 xhr.setRequestHeader("Content-Type","application/json");
+   	               },
+   	             success: function(customers, textStatus, xhr) { 
+   	               for (var i = 0; i < customers.length; i++) {
+   	               	var newRowContent = '<tr id="customer_'+customers[i]['merchantName']+'"><td>'+customers[i]['merchantName']+'</td><td>'+customers[i]['cardType']+'</td><td>'+customers[i]['cardOffers']+'</td><td><img src="images/'+customers[i]['merchantLogo']+'.jpg" class="img-thumbnail" alt="Cinque Terre" style="width: 120px ;height: 90px"></td></tr>'
+   	                 $("#add_card_tbody tbody").append(newRowContent);
+   	               }
+   	             },
+   	             error: function (xhr, ajaxOptions, thrownError) {
+   	               $(".error_message").addClass("show");
+   	               setTimeout(function() {
+   	                $(".error_message").removeClass("show");
+   	               }, 3000);
+   	               $("#addCard").modal("hide")
+   	             }
+   	           });
+   	    		call_flag = false
+   	    	}
+   	  }, 10000);
+   	});
+    
+    </script>
+    
+    
+</body>
+</html>

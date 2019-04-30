@@ -1,0 +1,233 @@
+<html lang="en">
+  <head>
+    <title>Near By Offer</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+   <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+   <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>    
+   <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+   
+  <!--  <link rel="stylesheet" href="css/bootstrap.min.css"> 
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.min.js"></script> -->
+  </head>
+  <body>
+    <nav class="navbar navbar-inverse">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="https://nearbyoffers.herokuapp.com/index.html">Near By Offers </a>
+        </div>
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="#-">Home</a></li>
+          <li class="active"><a href="#-" data-toggle="modal" data-target="#addCard" style="margin-left: 20px;">Add</a></li>
+          <!-- <li class="active"><a href="#-" style="margin-left: 1310px;">Admin</a></li> -->
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container">
+      <div class="alert alert-success success_message" style="display: none">
+        <strong>Card Register Successfully</strong>
+      </div>
+      <div class="alert alert-danger fade in error_message" style="display: none">
+        <strong>Something Went Wrong on Server</strong>
+      </div>
+      <h3 class="page-header text-center"><b>Customer Information</b></h3>
+      <a href="#-" class="btn btn-primary text-rigth" data-toggle="modal" data-target="#addCard" style="margin-bottom: 10px; margin-left: 195px;">Add</a>
+      <a href="offers.html" class="btn btn-primary text-rigth" style="margin-bottom: 10px; margin-left: 622px;">Next</a>
+      <div class="col-md-8" style="margin-left: 180px;">
+        <table class="table table-hover table-bordered" id="add_card_tbody">
+          <thead>
+          	<tr>
+          	</tr>
+            <tr>
+<!--               <th>customerId</th>
+              <th>customerName</th>
+              <th>customerMobileNumber</th> -->
+              <th>A/C Number</th>
+              <th>Card Number</th>
+              <th>Card Type</th>
+              <th>Card Image</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr></tr>
+          </tbody>
+        </table>
+      </div>
+
+      
+      <!--Add Modal-->
+
+      <div class="modal fade" id="addCard" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header text-center">
+              <h4 class="modal-title w-100 font-weight-bold">Add Customer Card Details</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <form id="add_card_form">
+              <div class="modal-body mx-3">
+                <div class="md-form mb-5" style="margin-bottom: 15px" >
+                  <label data-error="wrong" data-success="right" for="form3">Customer Name</label>
+                  <input type="text" class="form-control" name="customerName" required="required">
+                </div>
+
+                <div class="md-form mb-5" style="margin-bottom: 15px" >
+                  <label data-error="wrong" data-success="right" for="form3">Customer Mobile Number</label>
+                  <input type="text" pattern="[789][0-9]{9}" title="Please enter valid phone number with 10 digits" class="form-control" name="customerMobileNumber" required="required">
+                </div>
+
+                <div class="md-form mb-5" style="margin-bottom: 15px" >
+                  <label data-error="wrong" data-success="right" for="form3">Card ID</label>
+                  <input type="text" class="form-control" name="cardId" required="required">
+                </div>
+
+                <div class="md-form mb-5" style="margin-bottom: 15px" >
+                  <label data-error="wrong" data-success="right" for="form3">Card Number</label>
+                  <input type="text" class="form-control" name="customerCardNumber" required="require>
+                </div>
+
+                <div class="md-form mb-5" style="margin-bottom: 15px" >
+                  <label data-error="wrong" data-success="right" for="form3">Card Type</label>
+                  <input type="text" class="form-control" name="cardType" required="required">
+                </div>
+
+                <div class="md-form mb-5" style="margin-bottom: 15px" >
+                  <label data-error="wrong" data-success="right" for="form3">Card Image Name</label>
+                  <select class="form-control" id="cardImage" name="cardImage" required="required">
+                    <option value="sbi">SBI</option>
+                    <option value="hsbc">HSBC</option>
+                    <option value="nbs">NBS</option>
+                    <option value="city_bank">CITY BANK</option>
+                  </select>
+                </div>
+              </div>
+              <div class="modal-footer d-flex justify-content-center text-center">
+                <center><button class="btn btn-indigo btn btn-primary">Register</button></center>
+              </div>
+            </form>  
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      $("#add_card_form").submit(function(e){
+        e.preventDefault();
+        
+        var form_ob = {
+          "cardId": $('input[name="cardId"]').val(),
+          "cardImage": $("#cardImage").val(),
+          "cardType": $('input[name="cardType"]').val(),
+          "customerCardNumber": $('input[name="customerCardNumber"]').val(),
+          "customerMobileNumber":Number($('input[name="customerMobileNumber"]').val()),
+          "customerName": $('input[name="customerName"]').val()
+        }
+
+        $.ajax({
+          type: 'post',
+          url: "https://nearbyoffers.herokuapp.com/customers/registerCustomer",
+          data: JSON.stringify(form_ob),
+          dataType: "JSON",
+          beforeSend: function (xhr){ 
+              xhr.setRequestHeader("Accept","application/json");
+              xhr.setRequestHeader("Content-Type","application/json");
+            },
+          success: function(data, textStatus, xhr) { 
+            $("#addCard").modal("hide")
+        	  $(".success_message").addClass("show");
+            setTimeout(function() {
+             $(".success_message").removeClass("show");
+            }, 3000);
+
+            var newRowContent = '<tr id="customer_'+data['customerId']+'"><td>'+data['cardId']+'</td><td>'+data['customerCardNumber']+'</td><td>'+data['cardType']+'</td><td><img src="images/'+data['cardImage']+'.jpg" class="img-thumbnail" alt="Cinque Terre" style="width: 140px ;height: 90px"></td><td id="customer_remove_'+data['customerId']+'"><a href="javascript:void(0)" class="btn btn-danger remove_customer ">Remove</a></td></tr>'
+            $("#add_card_tbody tbody").append(newRowContent);
+          },
+          error: function (xhr, ajaxOptions, thrownError) {
+        	  
+            $(".error_message").addClass("show");
+            setTimeout(function() {
+             $(".error_message").removeClass("show");
+            }, 3000);
+            $("#addCard").modal("hide")
+          }
+        });
+      });
+    </script>
+
+
+    <script type="text/javascript">
+      $('.confirmation').on('click', function () {
+        return confirm('Are you sure?');
+      });   
+
+      $(document).ready(function(e){
+       
+        $.ajax({
+          type: 'GET',
+          url: "https://nearbyoffers.herokuapp.com/customers/getAllCustomers",
+          dataType: "JSON",
+          beforeSend: function (xhr){ 
+              xhr.setRequestHeader("Accept","application/json");
+              xhr.setRequestHeader("Content-Type","application/json");
+            },
+          success: function(customers, textStatus, xhr) { 
+            for (var i = 0; i < customers.length; i++) {
+              var newRowContent = '<tr id="customer_'+customers[i]['customerId']+'"><td>'+customers[i]['cardId']+'</td><td>'+customers[i]['customerCardNumber']+'</td><td>'+customers[i]['cardType']+'</td><td><img src="images/'+customers[i]['cardImage']+'.jpg" class="img-thumbnail" alt="Cinque Terre" style="width: 140px ;height: 90px"></td><td id="customer_remove_'+customers[i]['customerId']+'"><a class="btn btn-danger remove_customer confirmation" >Remove</a></td></tr>'
+              $("#add_card_tbody tbody").append(newRowContent);
+            }
+
+          },
+          error: function (xhr, ajaxOptions, thrownError) {
+            $(".error_message").addClass("show");
+            setTimeout(function() {
+             $(".error_message").removeClass("show");
+            }, 3000);
+            $("#addCard").modal("hide")
+          }
+        });
+      });
+    </script>
+
+    <script type="text/javascript">
+      $(document).on("click", ".remove_customer", function(){
+        var customer_id = Number($(this).parent().attr('id').split('_').pop())
+        $.ajax({
+          type: 'DELETE',
+          url: 'https://nearbyoffers.herokuapp.com/customers/'+customer_id+'',
+          dataType: "JSON",
+          beforeSend: function (xhr){ 
+              xhr.setRequestHeader("Accept","application/json");
+              xhr.setRequestHeader("Content-Type","application/json");
+            },
+          success: function(data, textStatus, xhr) { 
+            $('#customer_'+data['customerId']+'').remove();  
+          },
+          error: function (data, ajaxOptions, thrownError) {
+            if (xhr.status == 200){
+              $('#customer_'+data['customerId']+'').remove();
+            }
+            else {
+              $(".error_message").addClass("show");
+              setTimeout(function() {
+               $(".error_message").removeClass("show");
+              }, 3000);
+              $("#addCard").modal("hide")
+            }
+          }
+        });
+      }); 
+    </script>
+
+    <style type="text/css">
+      .show{
+        display: block;
+      }
+    </style>
+  </body>
+</html>
